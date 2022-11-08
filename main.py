@@ -38,10 +38,6 @@ def run_one(the_data, evalu=False):
         my_model.train()
         optimizer.zero_grad()
     for q_text, exact_answers, snip, _, g_emb in pbar:
-        print(q_text)
-        print(exact_answers)
-        print(snip)
-        print(pbar)
         sent_ids = lm_tokenizer.encode(snip.lower())[1:]
         quest_ids = lm_tokenizer.encode(q_text.lower())
         #######################################################################
