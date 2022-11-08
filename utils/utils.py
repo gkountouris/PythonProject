@@ -31,6 +31,13 @@ class ColoredFormatter(logging.Formatter):
         return msg
 
 
+def log_gpu(all_devices, logger):
+    use_cuda = torch.cuda.is_available()
+    for num, devices in enumerate(all_devices):
+        logger.info('Device number {}: '.format(num))
+        logger.info((use_cuda, devices))
+
+
 def set_up_logger(level, mode):
 
     path = pathlib.Path(__file__).parent.parent.resolve()
@@ -110,6 +117,7 @@ def save_checkpoint(epoch, model, optimizer, scheduler, filename='checkpoint.pth
         'scheduler':        scheduler.state_dict(),
     }
     torch.save(state, filename)
+    return filename
 
 
 def load_model_from_checkpoint(resume_from, my_model, optimizer, lr_scheduler):
@@ -127,13 +135,11 @@ def load_data(path, keep_only, logger):
     data = pickle.load(open(path, 'rb'))
     sws = stopwords.words('english')
     ##################################################################################################
-    logger.info('All Data: ', len(data))
+    logger.info('All Data: {}'.format(len(data)))
     ##################################################################################################
     data_ = []
     for (qq, anss, context, type, graph_emb) in data:
         anss_ = []
-        context_plus_graph = context[:]
-        special_rule = ''
         if type != keep_only:
             continue
         if len(context) > 500:
@@ -145,12 +151,23 @@ def load_data(path, keep_only, logger):
                 continue
             if ans.lower() in sws:
                 continue
-            if ans.split()[0].lower() in ['the', 'a'] :
+            if ans.split()[0].lower() in ['the', 'a']:
                 ans = ' '.join(ans.split()[1:])
             anss_.append(ans)
         if len(anss_) > 0:
-            data_.append((qq, anss_, context_plus_graph, type, graph_emb))
+            data_.append((qq, anss_, context, type, graph_emb["nodes_original"]))
     ##################################################################################################
-    logger.info('Keep only Data: ', len(data))
+    logger.info('Keep only Data: {}'.format(len(data)))
     ##################################################################################################
     return data_
+
+
+def centroid_embeddings(g_emb, embed, lm_out, device):
+    node_embeddings = torch.zeros(200)
+    for emb_keys in g_emb:
+        node_embeddings = torch.add(node_embeddings, torch.FloatTensor(embed[emb_keys]), out=None)
+    node_embeddings = torch.div(node_embeddings, len(g_emb))
+    node_embeddings = node_embeddings.view(1, 1, 200)
+    node_embeddings = node_embeddings.repeat(1, lm_out.shape[1], 1).to(device)
+    return torch.cat((lm_out, node_embeddings), 2)
+
