@@ -163,14 +163,14 @@ def load_data(path, keep_only, logger):
 
 
 def centroid_embeddings(g_emb, embed, lm_out, device):
-    node_embeddings = torch.zeros(200)
+    node_embeddings = torch.zeros(200).to(device)
     if len(g_emb) > 0:
         for emb_keys in g_emb:
-            node_embeddings = torch.add(node_embeddings, torch.FloatTensor(embed[emb_keys]), out=None)
+            node_embeddings = torch.add(node_embeddings, torch.FloatTensor(embed[emb_keys]).to(device), out=None)
         node_embeddings = torch.div(node_embeddings, len(g_emb))
-        node_embeddings = node_embeddings.view(1, 1, 200)
-        node_embeddings = node_embeddings.repeat(1, lm_out.shape[1], 1).to(device)
     else:
         pass
+    node_embeddings = node_embeddings.view(1, 1, 200)
+    node_embeddings = node_embeddings.repeat(1, lm_out.shape[1], 1)
     return torch.cat((lm_out, node_embeddings), 2)
 

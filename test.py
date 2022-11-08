@@ -18,24 +18,21 @@ from utils import utils
 #
 # data = pickle.load(open('/media/gkoun/BioASQ/BioASQ-data/bioasq_factoid/Graph/pubmed_factoid_extracted_data_train_triplets_plus_embeddings.p', 'rb'))
 
-node_embeddings = torch.zeros(200)
-ids = np.zeros(34)
-# for (qq, anss, context, type, graph_emb) in data:
-#     for emb_keys in graph_emb['nodes_original']:
-#         node_embeddings = torch.add(node_embeddings, torch.FloatTensor(emb[emb_keys]), out=None)
-#     node_embeddings = torch.div(node_embeddings, len(graph_emb))
-#     break
 
-token_embed = torch.zeros(1, len(ids), 1024)
-print(token_embed.shape)
+with torch.no_grad():
+    node_embeddings = torch.zeros(200)
+    ids = np.zeros(34)
+    # for (qq, anss, context, type, graph_emb) in data:
+    #     for emb_keys in graph_emb['nodes_original']:
+    #         node_embeddings = torch.add(node_embeddings, torch.FloatTensor(emb[emb_keys]), out=None)
+    #     node_embeddings = torch.div(node_embeddings, len(graph_emb))
+    #     break
 
-node_embeddings = node_embeddings.view(1, 1, 200)
-print(node_embeddings.shape)
-node_embeddings = node_embeddings.repeat(1, len(ids), 1)
-print(node_embeddings.shape)
+    token_embed = torch.zeros(1, len(ids), 1024)
 
-final_embeddings = torch.cat((token_embed, node_embeddings), 2)
+    node_embeddings = node_embeddings.view(1, 1, 200)
+    node_embeddings = node_embeddings.repeat(1, len(ids), 1)
 
-print(final_embeddings.shape)
+    final_embeddings = torch.cat((token_embed, node_embeddings), 2)
 
 # torch.cat((x, x, x), 0)
