@@ -2,21 +2,18 @@ from sklearn.metrics import auc as sklearn_auc
 from sklearn.metrics import precision_recall_curve
 from torch.optim.lr_scheduler import LambdaLR
 import torch
-# gradient descent optimization with nadam for a two-dimensional test function
-import logging
 import colorama
 from colorama import Fore
 import os
-
-from math import sqrt
-from numpy import asarray
-from numpy.random import rand
-from numpy.random import seed
+import json
 import pickle
 from nltk.corpus import stopwords
 
 import logging
 import pathlib
+
+from pyexcel_ods3 import save_data
+from collections import OrderedDict
 
 
 class ColoredFormatter(logging.Formatter):
@@ -104,20 +101,25 @@ def find_sub_list(sl, l):
             results.append((ind, ind+sll-1))
     return results
 
-def save_checkpoint(epoch, model, optimizer, scheduler, filename='checkpoint.pth.tar'):
+
+def save_checkpoint(epoch, model, optimizer, scheduler):
+
     '''
-    :param state:       the stete of the pytorch mode
-    :param filename:    the name of the file in which we will store the model.
-    :return:            Nothing. It just saves the model.
+    :param epoch:       the state of the pytorch mode
+    :param model:
+    :param optimizer:
+    :param scheduler:
+
+    :return state:      State of the model.
     '''
+
     state = {
         'epoch':            epoch,
         'state_dict':       model.state_dict(),
         'optimizer':        optimizer.state_dict(),
         'scheduler':        scheduler.state_dict(),
     }
-    torch.save(state, filename)
-    return filename
+    return state
 
 
 def load_model_from_checkpoint(resume_from, my_model, optimizer, lr_scheduler):
@@ -132,7 +134,11 @@ def load_model_from_checkpoint(resume_from, my_model, optimizer, lr_scheduler):
 
 
 def load_data(path, keep_only, logger):
-    data = pickle.load(open(path, 'rb'))
+    with open(path, 'rb') as f:
+        try:
+            data = pickle.load(f)
+        except:
+            data = json.load(f)
     sws = stopwords.words('english')
     ##################################################################################################
     logger.info('All Data: {}'.format(len(data)))
@@ -174,3 +180,9 @@ def centroid_embeddings(g_emb, embed, lm_out, device):
     node_embeddings = node_embeddings.repeat(1, lm_out.shape[1], 1)
     return torch.cat((lm_out, node_embeddings), 2)
 
+
+def results_to_ods(mode, result_list):
+    data = OrderedDict()
+    data.update({mode: [["overall_losses", "aucs", "prerec_aucs", "F1 0.1", "F1 0.2", "F1 0.3", "F1 0.4",
+                         "F1 0.5", "F1 0.6", "F1 0.7", "F1 0.8", "F1 0.9"], result_list]})
+    save_data("results.ods", data)

@@ -21,6 +21,7 @@ class OnTopModeler(nn.Module):
         y = self.linear2(y)
         return y
 
+
 class ScaledDotProductAttention(nn.Module):
     """
     Scaled Dot-Product Attention proposed in "Attention Is All You Need"

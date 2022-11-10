@@ -7,6 +7,8 @@ def add_data_arguments(parser):
     parser.add_argument("--dev_path", type=str, help="Dev path.", required=False)
     parser.add_argument("--test_path", type=str, help="Test path.", required=False)
     parser.add_argument("--keep_only", type=str, default='factoid_snippet', help="Keep Only.", required=False)
+    parser.add_argument("--no_graph", type=bool, default=False, help="Graph or no Graph that will be the question.",
+                        required=False)
 
 def add_encoder_arguments(parser):
     parser.add_argument("--model_name", type=str, default="michiyasunaga/BioLinkBERT-large", help="Prefix.",
@@ -16,7 +18,7 @@ def add_encoder_arguments(parser):
 def add_optimization_arguments(parser):
     parser.add_argument("--batch_size", type=int, default=16, nargs="?", help="Batch size.", required=False)
     parser.add_argument("--warmup_steps", type=int, default=0, nargs="?", help="Warmup steps.", required=False)
-    parser.add_argument("--total_epochs", type=int, default=50, nargs="?", help="Total epochs.", required=False)
+    parser.add_argument("--total_epochs", type=int, default=3, nargs="?", help="Total epochs.", required=False)
     parser.add_argument("--patience", type=int, default=5, nargs="?", help="patience.", required=False)
     parser.add_argument("--hidden_dim", type=int, default=100, nargs="?", help="Hidden dimensions.", required=False)
     parser.add_argument("--lr", type=float, default=5e-5, nargs="?", help="Learning rate.", required=False)
