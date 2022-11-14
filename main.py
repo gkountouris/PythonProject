@@ -162,12 +162,26 @@ if __name__ == '__main__':
 
     args.no_graph = True
 
-    my_data_path = pathlib.Path('/media/gkoun/BioASQ/BioASQ-data/bioasq_factoid/Graph/')
-    save_folder = pathlib.Path('/media/gkoun/BioASQ/saved_models/')
-
-    args.train_path = my_data_path.joinpath('pubmed_factoid_extracted_data_train_triplets_plus_embeddings.p').resolve()
-    args.dev_path = my_data_path.joinpath('pubmed_factoid_extracted_data_dev_triplets_plus_embeddings.p').resolve()
-    args.test_path = my_data_path.joinpath('pubmed_factoid_extracted_data_test_triplets_plus_embeddings.p').resolve()
+    try:
+        my_data_path = pathlib.Path('/home/gk/Documents/BioASQ/BioASQ-data/bioasq_factoid/Graph')
+        save_folder = pathlib.Path('/home/gk/Documents/BioASQ/saved_models/')
+        args.train_path = my_data_path.joinpath(
+            'pubmed_factoid_extracted_data_train_triplets_plus_embeddings.p').resolve()
+        args.dev_path = my_data_path.joinpath('pubmed_factoid_extracted_data_dev_triplets_plus_embeddings.p').resolve()
+        args.test_path = my_data_path.joinpath(
+            'pubmed_factoid_extracted_data_test_triplets_plus_embeddings.p').resolve()
+        with open(my_data_path.joinpath('drkg_enhanced_logic_3_200_30_entity_embeddings.json'), 'r') as f:
+            embed = json.load(f)
+    except:
+        my_data_path = pathlib.Path('/media/gkoun/BioASQ/BioASQ-data/bioasq_factoid/Graph/')
+        save_folder = pathlib.Path('/media/gkoun/BioASQ/saved_models/')
+        args.train_path = my_data_path.joinpath(
+            'pubmed_factoid_extracted_data_train_triplets_plus_embeddings.p').resolve()
+        args.dev_path = my_data_path.joinpath('pubmed_factoid_extracted_data_dev_triplets_plus_embeddings.p').resolve()
+        args.test_path = my_data_path.joinpath(
+            'pubmed_factoid_extracted_data_test_triplets_plus_embeddings.p').resolve()
+        with open(my_data_path.joinpath('drkg_enhanced_logic_3_200_30_entity_embeddings.json'), 'r') as f:
+            embed = json.load(f)
 
     info_logger = utils.set_up_logger('info', 'w')
     error_logger = utils.set_up_logger('error', 'w')
@@ -175,9 +189,6 @@ if __name__ == '__main__':
     train_data = utils.load_data(args.train_path, args.keep_only, info_logger)
     dev_data = utils.load_data(args.dev_path, args.keep_only, info_logger)
     test_data = utils.load_data(args.test_path, args.keep_only, info_logger)
-
-    with open(my_data_path.joinpath('drkg_enhanced_logic_3_200_30_entity_embeddings.json'), 'r') as f:
-      embed = json.load(f)
 
     monitor = args.monitor
 
