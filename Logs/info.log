@@ -1,0 +1,11 @@
+[36m2022-11-14 11:45:51,458|INFO|info|All Data: 3806[39m
+[36m2022-11-14 11:45:51,482|INFO|info|Keep only Data: 3806[39m
+[36m2022-11-14 11:45:51,570|INFO|info|All Data: 399[39m
+[36m2022-11-14 11:45:51,574|INFO|info|Keep only Data: 399[39m
+[36m2022-11-14 11:45:51,602|INFO|info|All Data: 704[39m
+[36m2022-11-14 11:45:51,608|INFO|info|Keep only Data: 704[39m
+[36m2022-11-14 11:46:11,494|INFO|info|Device number 0: [39m
+[36m2022-11-14 11:46:11,494|INFO|info|(True, <torch.cuda.device object at 0x7f2e629f8d68>)[39m
+[36m2022-11-14 11:46:11,494|INFO|info|Device number 1: [39m
+[36m2022-11-14 11:46:11,494|INFO|info|(True, <torch.cuda.device object at 0x7f2e629f8ef0>)[39m
+[36m2022-11-14 11:46:20,487|INFO|info|{'unk_token': '[UNK]', 'sep_token': '[SEP]', 'pad_token': '[PAD]', 'cls_token': '[CLS]', 'mask_token': '[MASK]'}[39m
