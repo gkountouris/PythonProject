@@ -26,4 +26,5 @@ result_list = [0, 0, 2, 3]
 for thr in list:
     result_list.append(thr)
 
-print(result_list)
+for i in range(len(list)):
+    print(type(result_list[i]))

@@ -183,6 +183,8 @@ def centroid_embeddings(g_emb, embed, lm_out, device):
 
 def results_to_ods(mode, result_list):
     data = OrderedDict()
-    data.update({mode: [["overall_losses", "aucs", "prerec_aucs", "F1 0.1", "F1 0.2", "F1 0.3", "F1 0.4",
-                         "F1 0.5", "F1 0.6", "F1 0.7", "F1 0.8", "F1 0.9"], result_list]})
+    data.update({mode: result_list})
     save_data("results.ods", data)
+
+# ["overall_losses", "aucs", "prerec_aucs", "F1 0.1", "F1 0.2", "F1 0.3", "F1 0.4",
+#                          "F1 0.5", "F1 0.6", "F1 0.7", "F1 0.8", "F1 0.9"],
