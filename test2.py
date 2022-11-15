@@ -5,6 +5,8 @@ import sys
 import os
 import numpy as np
 
+import utils.utils
+
 # # open pickle file
 # with open(sys.argv[1], 'rb') as infile:
 #     obj = pickle.load(infile)
@@ -28,3 +30,7 @@ for thr in list:
 
 for i in range(len(list)):
     print(type(result_list[i]))
+
+print(result_list)
+utils.utils.results_to_ods('TEST', result_list)
+
