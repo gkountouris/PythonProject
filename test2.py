@@ -23,14 +23,11 @@ import utils.utils
 #     json.dump(json_obj, outfile, ensure_ascii=False, indent=4)
 # zeros = np.zeros(5)
 
-list = [0.09316565445608868, 0.004929577464788732, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-result_list = [0, 0, 2, 3]
-for thr in list:
-    result_list.append(thr)
 
+result_list = [0.1845649238623364, 0.6812170845009172, 0.11010780144882312, 0.09316565445608868, 0.004929577464788732, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 for i in range(len(list)):
     print(type(result_list[i]))
-result_list = [0.1845649238623364, 0.6812170845009172, 0.11010780144882312, 0.09316565445608868, 0.004929577464788732, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
 print(result_list)
 utils.utils.results_to_ods('TEST', result_list)
 
