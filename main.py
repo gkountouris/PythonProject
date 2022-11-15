@@ -219,7 +219,7 @@ if __name__ == '__main__':
     random.shuffle(train_data)
     num_training_steps = args.total_epochs * (len(train_data) // args.batch_size)
 
-    method = 'attention'
+    method = 'OnTopModeler'
     if method == 'OnTopModeler':
         my_model = my_models.OnTopModeler(args.transformer_size+200, args.hidden_dim).to(rest_device)
     else:
