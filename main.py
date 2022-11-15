@@ -145,6 +145,7 @@ def test_one(the_data, mode):
     )
     result_list = [np.average(overall_losses), np.average(aucs), np.average(prerec_aucs),
                    [np.average(f1s[thr]) for thr in f1s]]
+    print(result_list)
     utils.results_to_ods(mode, result_list)
 
     ###########################################################################
@@ -217,7 +218,12 @@ if __name__ == '__main__':
     random.shuffle(train_data)
     num_training_steps = args.total_epochs * (len(train_data) // args.batch_size)
 
-    my_model = my_models.OnTopModeler(args.transformer_size+200, args.hidden_dim).to(rest_device)
+    method = 'attention'
+    if method == 'OnTopModeler':
+        my_model = my_models.OnTopModeler(args.transformer_size+200, args.hidden_dim).to(rest_device)
+    else:
+        my_model = my_models.OnTopModeler(args.transformer_size, args.hidden_dim).to(rest_device)
+
     optimizer = optim.AdamW(my_model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
     lr_scheduler = utils.get_linear_schedule_with_warmup(optimizer, num_warmup_steps=args.warmup_steps,
                                                          num_training_steps=num_training_steps)

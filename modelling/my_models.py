@@ -22,6 +22,22 @@ class OnTopModeler(nn.Module):
         return y
 
 
+class AttentionEmbeddings(nn.Module):
+    def __init__(self, input_size, hidden_nodes, g_embeddings):
+        super(AttentionEmbeddings, self).__init__()
+        self.input_size = input_size
+        self.linear1 = nn.Linear(input_size, hidden_nodes, bias=True)
+        self.linear2 = nn.Linear(hidden_nodes, 2, bias=True)
+        self.loss = nn.BCELoss()
+        self.tanh = nn.Tanh()
+
+    def forward(self, input_xs):
+        y = self.linear1(input_xs)
+        y = self.tanh(y)
+        y = self.linear2(y)
+        return y
+
+
 class ScaledDotProductAttention(nn.Module):
     """
     Scaled Dot-Product Attention proposed in "Attention Is All You Need"
