@@ -150,6 +150,8 @@ def test_one(the_data, mode):
 
     print('I am doing what ever')
     print(result_list)
+    for i in range(len(result_list)):
+        print(type(result_list[i]))
     utils.results_to_ods(mode, result_list)
 
     ###########################################################################
