@@ -143,8 +143,11 @@ def test_one(the_data, mode):
             ] + [str(np.average(f1s[thr])) for thr in f1s]
         )
     )
-    result_list = [np.average(overall_losses), np.average(aucs), np.average(prerec_aucs),
-                   [np.average(f1s[thr]) for thr in f1s]]
+    result_list = [np.average(overall_losses), np.average(aucs), np.average(prerec_aucs)]
+
+    for thr in f1s:
+        result_list.append(np.average(f1s[thr]))
+
     print('I am doing what ever')
     print(result_list)
     utils.results_to_ods(mode, result_list)
