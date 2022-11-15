@@ -25,7 +25,7 @@ import utils.utils
 
 
 result_list = [0.1845649238623364, 0.6812170845009172, 0.11010780144882312, 0.09316565445608868, 0.004929577464788732, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-for i in range(len(list)):
+for i in range(len(result_list)):
     print(type(result_list[i]))
 
 print(result_list)
