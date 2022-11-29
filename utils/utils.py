@@ -33,7 +33,7 @@ def log_gpu(all_devices, logger):
 
 
 def set_up_logger(level, mode):
-    path = pathlib.Path('/content/drive/MyDrive/Github/PythonProject')
+    path = pathlib.Path('')
     path = path.joinpath('Logs', level + '.log')
     # Create logger and assign handler
     logger = logging.getLogger(level)
@@ -202,7 +202,7 @@ def model_choose(g_emb, embed, lm_out, quest_ids, my_model, device, method):
                                        b.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
     if method == 'OnTopModeler':
-        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, first_device)
+        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, device)
         begin_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 0]
         end_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
