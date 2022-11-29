@@ -12,9 +12,6 @@ from nltk.corpus import stopwords
 import logging
 import pathlib
 
-from pyexcel_ods3 import save_data
-from collections import OrderedDict
-
 
 class ColoredFormatter(logging.Formatter):
     def format(self, record):
