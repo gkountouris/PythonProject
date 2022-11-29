@@ -287,7 +287,6 @@ if __name__ == '__main__':
             )
 
     results['DEV'].append(data_results)
-    print(my_model.Vmatrix1[0].weight)
     torch.save(state, filename)
     my_model = utils.load_model_from_checkpoint(filename, my_model, optimizer, lr_scheduler)
     _, data_results = test_one(test_data, 'TEST')
