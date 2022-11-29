@@ -161,7 +161,7 @@ if __name__ == '__main__':
     parser = parser_utils.get_parser()
     args, _ = parser.parse_known_args()
 
-    args.graph = False
+    # args.graph = False
 
     try:
         my_data_path = pathlib.Path('/home/gk/Documents/BioASQ/BioASQ-data/bioasq_factoid/Graph')
