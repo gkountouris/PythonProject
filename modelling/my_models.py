@@ -9,7 +9,7 @@ from typing import Optional, Tuple
 class OnTopModeler(nn.Module):
     def __init__(self, input_size, hidden_nodes):
         super(OnTopModeler, self).__init__()
-        self.input_size = input_size
+        # self.input_size = input_size
         self.linear1 = nn.Linear(input_size, hidden_nodes, bias=True)
         self.linear2 = nn.Linear(hidden_nodes, 2, bias=True)
         self.loss = nn.BCELoss()
@@ -23,16 +23,21 @@ class OnTopModeler(nn.Module):
 
 
 class AttentionEmbeddings(nn.Module):
-    def __init__(self, input_size, hidden_nodes, g_embeddings):
+    def __init__(self, input_size, g_embe_size, hidden_nodes):
         super(AttentionEmbeddings, self).__init__()
-        self.input_size = input_size
+        self.Kmatrix = nn.Linear(g_embe_size, input_size, bias=False)
+        self.Vmatrix = nn.Linear(g_embe_size, input_size, bias=False)
+        self.sdpa = ScaledDotProductAttention(g_embe_size)
         self.linear1 = nn.Linear(input_size, hidden_nodes, bias=True)
         self.linear2 = nn.Linear(hidden_nodes, 2, bias=True)
         self.loss = nn.BCELoss()
         self.tanh = nn.Tanh()
 
-    def forward(self, input_xs):
-        y = self.linear1(input_xs)
+    def forward(self, input_xs, g_embe):
+        key = self.Kmatrix(g_embe)
+        value = self.Vmatrix(g_embe)
+        context, _ = self.sdpa(input_xs, key, value)
+        y = self.linear1(context)
         y = self.tanh(y)
         y = self.linear2(y)
         return y
@@ -58,6 +63,7 @@ class ScaledDotProductAttention(nn.Module):
     def __init__(self, dim: int):
         super(ScaledDotProductAttention, self).__init__()
         self.sqrt_dim = np.sqrt(dim)
+
 
     def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
         score = torch.bmm(query, key.transpose(1, 2)) / self.sqrt_dim

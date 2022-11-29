@@ -10,8 +10,6 @@ embed
 
 train_path
 
-
-
 answered_train
 q a s t=factoid_snipet
 ['Which gene mutation is associated with Woodhouse Sakati syndrome?', ['DCAF17'], 'CASE REPORT We illustrate the phenotypic variability of 5 patients with WSS due to the previously reported homozygous single nucleotide deletion c.436delC in the DCAF17 gene, identified in 2008. Despite identical genetic alteration, our 5 patients had various clinical features among them and compared with previously reported cases with the same pathogenic mutation.', 'factoid_snippet']

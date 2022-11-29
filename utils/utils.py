@@ -163,7 +163,7 @@ def load_data(path, keep_only, logger):
         if len(anss_) > 0:
             data_.append((qq, anss_, context, type, graph_emb["nodes_original"]))
     ##################################################################################################
-    logger.info('Keep only Data: {}'.format(len(data)))
+    logger.info('Keep only Data: {}'.format(len(data_)))
     ##################################################################################################
     return data_
 
@@ -184,3 +184,32 @@ def centroid_embeddings(g_emb, embed, lm_out, device):
 def results_to_ods(mode, result_list):
     b = [float(i) for i in result_list]
     save_data("results.ods", {mode: [b]})
+
+
+def attention_embeddings(g_emb, embed):
+    l = []
+    if len(g_emb) > 0:
+        for emb_keys in g_emb:
+            l.append(embed[emb_keys])
+        node_embeddings = torch.Tensor(l)
+        node_embeddings = node_embeddings.view(1, len(g_emb), 200)
+    else:
+        node_embeddings = torch.zeros(200)
+        node_embeddings = node_embeddings.view(1, 1, 200)
+
+    return node_embeddings
+
+
+def model_choose(g_emb, embed, lm_out, sent_ids, my_model, device, method):
+    if method == 'attention':
+        b = attention_embeddings(g_emb, embed)
+        begin_y = torch.sigmoid(my_model(lm_out.to(device),
+                                         b.to(device)))[0, -len(sent_ids):, 0]
+        end_y = torch.sigmoid(my_model(lm_out.to(device),
+                                         b.to(device)))[0, -len(sent_ids):, 1]
+        return begin_y, end_y
+    if method == 'OnTopModeler':
+        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, device)
+        begin_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, -len(sent_ids):, 0]
+        end_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, -len(sent_ids):, 1]
+        return begin_y, end_y

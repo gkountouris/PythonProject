@@ -223,7 +223,7 @@ if __name__ == '__main__':
     if method == 'OnTopModeler':
         my_model = my_models.OnTopModeler(args.transformer_size+200, args.hidden_dim).to(rest_device)
     else:
-        my_model = my_models.OnTopModeler(args.transformer_size, args.hidden_dim).to(rest_device)
+        my_model = my_models.AttentionEmbeddings(args.transformer_size, args.hidden_dim, embed).to(rest_device)
 
     optimizer = optim.AdamW(my_model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
     lr_scheduler = utils.get_linear_schedule_with_warmup(optimizer, num_warmup_steps=args.warmup_steps,
