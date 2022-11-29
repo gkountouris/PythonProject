@@ -17,8 +17,8 @@ from modelling import my_models
 from io import StringIO
 # A Python program to demonstrate working of OrderedDict
 from collections import OrderedDict
-from pyexcel_ods3 import save_data
-from pyexcel_ods3 import get_data
+from pyexcel_ods import save_data
+from pyexcel_ods import get_data
 
 def train_one(the_data):
     pbar = tqdm(the_data)
