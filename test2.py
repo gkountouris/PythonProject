@@ -87,10 +87,11 @@ for j, entry in tqdm(enumerate(train), total=len(train)):
         anss_.append(ans)
     if len(anss_) > 0:
         for keys in bioask10['questions']:
-            if keys['type'] != 'factoid':
-                continue
+            # if keys['type'] != 'factoid':
+            #     continue
             if keys['body'] == entry[0]:
                 id = keys['id']
+        # print(id)
         data_pubmed.append([entry[0], anss_, entry[2], entry[3], id])
 
 print('pubmed: ', len(data_pubmed))
