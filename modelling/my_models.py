@@ -89,7 +89,7 @@ class PerceiverIO(nn.Module):
     def __init__(self, input_size, g_embe_size, hidden_nodes):
         super(PerceiverIO, self).__init__()
         self.Kmatrix1 = nn.Linear(input_size, input_size, bias=False)
-        self.Vmatrix1 = nn.Linear(input_size, input_size, bias=True)
+        self.Vmatrix1 = nn.Linear(input_size, input_size, bias=False)
         self.Qmatrix1 = nn.Linear(g_embe_size, input_size, bias=False)
         self.sdpa1 = ScaledDotProductAttention(input_size)
         self.Kmatrix2 = nn.Linear(input_size, input_size, bias=False)

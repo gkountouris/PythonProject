@@ -15,7 +15,7 @@ tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
 my_data_path = pathlib.Path('/home/gk/Documents/BioASQ/BioASQ-data/bioasq_factoid/Graph')
 
-with open('squad1.1/train-v1.1.json', 'r') as f:
+with open('squad1.1/dev-v1.1.json', 'r') as f:
     squad = json.load(f)
 
 related_titles = ['Antibiotics', 'Anthropology', 'Genome', 'Symbiosis', 'Gene', 'Biodiversity', 'Digestion',
@@ -56,7 +56,7 @@ for data in squad['data']:
 
 print('SQUAD: ', len(squad_data))
 
-train_path = my_data_path.parent.joinpath('pubmed_factoid_extracted_data.p').resolve()
+train_path = my_data_path.parent.joinpath('pubmed_factoid_extracted_data_test.p').resolve()
 with open(train_path, 'rb') as f:
   train = pickle.load(f)
 
@@ -96,55 +96,56 @@ for j, entry in tqdm(enumerate(train), total=len(train)):
 
 print('pubmed: ', len(data_pubmed))
 
-with open('data/COVID-QA.json', 'r') as f:
-    covid = json.load(f)
+# with open('data/COVID-QA.json', 'r') as f:
+#     covid = json.load(f)
+#
+# covid_data = []
+# snipet = ''
+# snipet_plus1 = ''
+# snipet_minus1 = ''
+#
+# for data in covid['data']:
+#     for paras in data['paragraphs']:
+#         context = paras['context']
+#         sentences = tokenizer.tokenize(context)
+#         for qas in paras['qas']:
+#             question = qas['question']
+#             if 'Figure' in question:
+#                 continue
+#             answer = qas['answers'][0]['text']
+#             if len(answer.strip()) == 0:
+#                 continue
+#             if len(answer.split()) > 10:
+#                 continue
+#             id = qas['id']
+#             for idx, sentence in enumerate(sentences):
+#                 if answer in sentence:
+#                     snipet = sentences[idx]
+#                 try:
+#                     snipet_plus1 = sentences[idx + 1]
+#                 except:
+#                     pass
+#                 try:
+#                     snipet_minus1 = sentences[idx - 1]
+#                 except:
+#                     pass
+#             if len(snipet) == 0:
+#                 continue
+#             snipet_plus_minus1 = snipet_minus1 + ' ' + snipet + ' ' + snipet_plus1
+#             if len(snipet) > 500:
+#                 continue
+#             covid_data.append([question, answer, snipet, 'covid', id])
+#             if len(snipet_plus_minus1) > 500:
+#                 continue
+#             covid_data.append([question, answer, snipet_plus_minus1, 'covid', id])
 
-covid_data = []
-snipet = ''
-snipet_plus1 = ''
-snipet_minus1 = ''
-
-for data in covid['data']:
-    for paras in data['paragraphs']:
-        context = paras['context']
-        sentences = tokenizer.tokenize(context)
-        for qas in paras['qas']:
-            question = qas['question']
-            if 'Figure' in question:
-                continue
-            answer = qas['answers'][0]['text']
-            if len(answer.strip()) == 0:
-                continue
-            if len(answer.split()) > 10:
-                continue
-            id = qas['id']
-            for idx, sentence in enumerate(sentences):
-                if answer in sentence:
-                    snipet = sentences[idx]
-                try:
-                    snipet_plus1 = sentences[idx + 1]
-                except:
-                    pass
-                try:
-                    snipet_minus1 = sentences[idx - 1]
-                except:
-                    pass
-            if len(snipet) == 0:
-                continue
-            snipet_plus_minus1 = snipet_minus1 + ' ' + snipet + ' ' + snipet_plus1
-            if len(snipet) > 500:
-                continue
-            covid_data.append([question, answer, snipet, 'covid', id])
-            if len(snipet_plus_minus1) > 500:
-                continue
-            covid_data.append([question, answer, snipet_plus_minus1, 'covid', id])
-
-print(len(covid_data))
-
-final_data = data_pubmed + squad_data + covid_data
+# print(len(covid_data))
+#
+# final_data = data_pubmed + squad_data + covid_data
+final_data = data_pubmed + squad_data
 
 print('final: ', len(final_data))
 
-with open(os.path.join('pubmed_squad_covid_data_train.json'), 'w') as file:
+with open(os.path.join('pubmed_squad_covid_data_test.json'), 'w') as file:
     json.dump(final_data, file)
 
