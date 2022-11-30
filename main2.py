@@ -37,7 +37,7 @@ def train_one(the_data):
         lm_out = lm_model(lm_input)[0].to(first_device)
         #######################################################################
         begin_y, end_y = utils.model_choose(g_emb, embed, lm_out, quest_ids, my_model,
-                                      rest_device, method)
+                                      rest_device, args.method)
         #######################################################################
         target_b = torch.zeros(len(sent_ids) - 1).to(rest_device)
         target_e = torch.zeros(len(sent_ids) - 1).to(rest_device)
@@ -95,7 +95,7 @@ def test_one(the_data, mode):
             lm_out = lm_model(lm_input)[0].to(first_device)
             #######################################################################
             begin_y, end_y = utils.model_choose(g_emb, embed, lm_out, quest_ids, my_model,
-                                          rest_device, method)
+                                          rest_device, args.method)
             #######################################################################
             target_b = torch.zeros(len(sent_ids) - 1).to(rest_device)
             target_e = torch.zeros(len(sent_ids) - 1).to(rest_device)
@@ -254,8 +254,8 @@ if __name__ == '__main__':
     results.update({"DEV": get_data('results.ods')['DEV']})
     results.update({"TEST": get_data('results.ods')['TEST']})
 
-    results['DEV'].append([method, args.model_name, 'Graph: {}'.format(args.graph)])
-    results['TEST'].append([method, args.model_name, 'Graph: {}'.format(args.graph)])
+    results['DEV'].append([args.method, args.model_name, 'Graph: {}'.format(args.graph)])
+    results['TEST'].append([args.method, args.model_name, 'Graph: {}'.format(args.graph)])
 
     for epoch in range(0, args.total_epochs):
         train_one(train_data)
