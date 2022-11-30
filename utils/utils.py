@@ -13,7 +13,6 @@ import logging
 import pathlib
 
 
-
 class ColoredFormatter(logging.Formatter):
     def format(self, record):
         # Prepare the colored formatter
