@@ -12,8 +12,6 @@ from nltk.corpus import stopwords
 import logging
 import pathlib
 
-from pyexcel_ods3 import save_data
-from collections import OrderedDict
 
 
 class ColoredFormatter(logging.Formatter):
@@ -238,7 +236,7 @@ def model_choose(g_emb, embed, lm_out, quest_ids, my_model, device, method):
                                        b.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
     if method == 'OnTopModeler':
-        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, first_device)
+        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, device)
         begin_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 0]
         end_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
