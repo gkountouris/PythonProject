@@ -12,7 +12,7 @@ def add_encoder_arguments(parser):
     parser.add_argument("--model_name", type=str, default="michiyasunaga/BioLinkBERT-large", help="Prefix.",
                         required=False)
     parser.add_argument("--transformer_size", type=int, default=1024, help="Prefix.", required=False)
-    parser.add_argument("--method", type=int, default=1024, help="Prefix.", required=False)
+    parser.add_argument("--method", type=str, default='OnTopModeler', help="method of neural network.", required=False)
 
 def add_optimization_arguments(parser):
     parser.add_argument("--batch_size", type=int, default=16, nargs="?", help="Batch size.", required=False)
@@ -22,6 +22,7 @@ def add_optimization_arguments(parser):
     parser.add_argument("--hidden_dim", type=int, default=100, nargs="?", help="Hidden dimensions.", required=False)
     parser.add_argument("--lr", type=float, default=5e-5, nargs="?", help="Learning rate.", required=False)
     parser.add_argument("--monitor", type=str, default='auc', help="loss OR auc.", required=False)
+
 
 def add_additional_arguments(parser):
     parser.add_argument("--seed", type=int, default=1, nargs="?", help="Random seed.", required=False)
