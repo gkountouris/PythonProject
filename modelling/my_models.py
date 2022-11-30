@@ -44,13 +44,14 @@ class AttentionEmbeddings(nn.Module):
         y = self.linear2(y)
         return y
 
+
 class BigAttentionEmbeddings(nn.Module):
     def __init__(self, input_size, g_embe_size, hidden_nodes):
         super(BigAttentionEmbeddings, self).__init__()
         self.Kmatrix1 = nn.Linear(input_size, input_size, bias=False)
         self.Vmatrix1 = nn.Linear(input_size, input_size, bias=False)
         self.Qmatrix1 = nn.Linear(g_embe_size, input_size, bias=False)
-        self.sdpa1 = ScaledDotProductAttention(g_embe_size)
+        self.sdpa1 = ScaledDotProductAttention(input_size)
         self.Kmatrix2 = nn.Linear(input_size, input_size, bias=False)
         self.Vmatrix2 = nn.Linear(input_size, input_size, bias=False)
         self.Qmatrix2 = nn.Linear(input_size, input_size, bias=False)
@@ -103,7 +104,7 @@ class PerceiverIO(nn.Module):
         self.linear1 = nn.Linear(input_size, hidden_nodes, bias=True)
         self.linear2 = nn.Linear(hidden_nodes, 2, bias=True)
         self.loss = nn.BCELoss()
-        self.tanh = nn.Tanh()
+        self.tsent_idsanh = nn.Tanh()
 
     def forward(self, input_xs, g_embe, len_quest_ids):
 
@@ -147,7 +148,7 @@ class ScaledDotProductAttention(nn.Module):
     and apply a softmax function to obtain the weights on the values
     Args: dim, mask
         dim (int): dimention of attention
-        mask (torch.Tensor): tensor containing indices to be masked
+        mask (sent_idstorch.Tensor): tensor containing indices to be masked
     Inputs: query, key, value, mask
         - **query** (batch, q_len, d_model): tensor containing projection vector for decoder.
         - **key** (batch, k_len, d_model): tensor containing projection vector for encoder.

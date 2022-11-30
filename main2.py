@@ -12,6 +12,8 @@ from tqdm import tqdm
 import torch
 import pathlib
 from modelling import my_models
+# import lovely_tensors as lt
+# lt.monkey_patch()
 
 # Importing the StringIO module.
 from io import StringIO
@@ -25,7 +27,7 @@ def train_one(the_data):
     overall_losses = []
     my_model.train()
     optimizer.zero_grad()
-    for q_text, exact_answers, snip, _, g_emb in pbar:
+    for q_text, exact_answers, snip, _, _, g_emb in pbar:
         if args.graph:
             g_emb = []
         sent_ids = lm_tokenizer.encode(snip.lower())[1:]
@@ -83,7 +85,7 @@ def test_one(the_data, mode):
     ################################################################
     my_model.eval()
     with torch.no_grad():
-        for q_text, exact_answers, snip, _, g_emb in pbar:
+        for q_text, exact_answers, snip, _, _, g_emb in pbar:
             if args.graph:
                 g_emb = []
             sent_ids = lm_tokenizer.encode(snip.lower())[1:]
@@ -177,19 +179,23 @@ if __name__ == '__main__':
         my_data_path = pathlib.Path('/media/gkoun/BioASQ/BioASQ-data/bioasq_factoid/Graph/')
         save_folder = pathlib.Path('/media/gkoun/BioASQ/saved_models/')
         args.train_path = my_data_path.joinpath(
-            'pubmed_factoid_extracted_data_train_triplets_plus_embeddings.p').resolve()
-        args.dev_path = my_data_path.joinpath('pubmed_factoid_extracted_data_dev_triplets_plus_embeddings.p').resolve()
+            'final_pubmed_squad_covid_data_dev_graph.json').resolve()
+        args.dev_path = my_data_path.joinpath('final_pubmed_squad_covid_data_train_graph.json').resolve()
         args.test_path = my_data_path.joinpath(
-            'pubmed_factoid_extracted_data_test_triplets_plus_embeddings.p').resolve()
+            'final_pubmed_squad_covid_data_test_graph.json').resolve()
         with open(my_data_path.joinpath('drkg_enhanced_logic_3_200_30_entity_embeddings.json'), 'r') as f:
             embed = json.load(f)
 
     info_logger = utils.set_up_logger('info', 'w')
     error_logger = utils.set_up_logger('error', 'w')
 
-    train_data = utils.load_data(args.train_path, args.keep_only, info_logger)
-    dev_data = utils.load_data(args.dev_path, args.keep_only, info_logger)
-    test_data = utils.load_data(args.test_path, args.keep_only, info_logger)
+    # train_data = utils.load_data(args.train_path, args.keep_only, info_logger)
+    # dev_data = utils.load_data(args.dev_path, args.keep_only, info_logger)
+    # test_data = utils.load_data(args.test_path, args.keep_only, info_logger)
+
+    train_data = utils.load_data2(args.train_path, info_logger)
+    dev_data = utils.load_data2(args.dev_path, info_logger)
+    test_data = utils.load_data2(args.test_path, info_logger)
 
     monitor = args.monitor
 
@@ -219,7 +225,7 @@ if __name__ == '__main__':
     random.shuffle(train_data)
     num_training_steps = args.total_epochs * (len(train_data) // args.batch_size)
 
-    method = 'PerceiverIO'
+    method = 'BigAttention'
     if method == 'OnTopModeler':
         my_model = my_models.OnTopModeler(args.transformer_size + 200, args.hidden_dim).to(rest_device)
     elif method == 'CrossAttention':
@@ -266,7 +272,7 @@ if __name__ == '__main__':
                 args.hidden_dim,
                 epoch,
                 str(args.lr).replace('.', 'p')
-            )
+                )
             )
             print('DEV Score: ', dev_score)
             best_dev = dev_score
@@ -283,7 +289,7 @@ if __name__ == '__main__':
                 args.hidden_dim,
                 epoch,
                 str(args.lr).replace('.', 'p')
-            )
+                )
             )
 
     results['DEV'].append(data_results)

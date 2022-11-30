@@ -23,6 +23,7 @@ related_titles = ['Antibiotics', 'Anthropology', 'Genome', 'Symbiosis', 'Gene', 
                   'Tuberculosis', 'On_the_Origin_of_Species', 'Asthma', 'Diarrhea', 'Pain', 'Bacteria', 'Infection']
 
 squad_data = []
+ids = []
 snipet = ''
 snipet_minus1 = ''
 snipet_plus1 = ''
@@ -50,11 +51,14 @@ for data in squad['data']:
                 if len(snipet) > 500:
                     continue
                 squad_data.append([question, answer, snipet, 'squad', id])
+                ids.append(id)
                 if len(snipet_plus_minus1) > 500:
                     continue
                 squad_data.append([question, answer, snipet_plus_minus1, 'squad', id])
 
 print('SQUAD: ', len(squad_data))
+
+print(len(set(ids)))
 
 train_path = my_data_path.parent.joinpath('pubmed_factoid_extracted_data_test.p').resolve()
 with open(train_path, 'rb') as f:
@@ -68,6 +72,7 @@ keep_only = ['factoid_before_after_1', 'factoid_before_after_2', 'list_snippet',
 
 data = train
 data_pubmed = []
+ids = []
 for j, entry in tqdm(enumerate(train), total=len(train)):
     id = []
     anss_ = []
@@ -93,8 +98,10 @@ for j, entry in tqdm(enumerate(train), total=len(train)):
                 id = keys['id']
         # print(id)
         data_pubmed.append([entry[0], anss_, entry[2], entry[3], id])
+        ids.append(id)
 
 print('pubmed: ', len(data_pubmed))
+print('pubmed Id: ', len(set(ids)))
 
 # with open('data/COVID-QA.json', 'r') as f:
 #     covid = json.load(f)
@@ -103,6 +110,7 @@ print('pubmed: ', len(data_pubmed))
 # snipet = ''
 # snipet_plus1 = ''
 # snipet_minus1 = ''
+# ids = []
 #
 # for data in covid['data']:
 #     for paras in data['paragraphs']:
@@ -135,17 +143,19 @@ print('pubmed: ', len(data_pubmed))
 #             if len(snipet) > 500:
 #                 continue
 #             covid_data.append([question, answer, snipet, 'covid', id])
+#             ids.append(id)
 #             if len(snipet_plus_minus1) > 500:
 #                 continue
 #             covid_data.append([question, answer, snipet_plus_minus1, 'covid', id])
-
+#
 # print(len(covid_data))
+# print(len(set(ids)))
 #
 # final_data = data_pubmed + squad_data + covid_data
 final_data = data_pubmed + squad_data
 
 print('final: ', len(final_data))
 
-with open(os.path.join('pubmed_squad_covid_data_test.json'), 'w') as file:
-    json.dump(final_data, file)
+# with open(os.path.join('pubmed_squad_covid_data_test.json'), 'w') as file:
+#     json.dump(final_data, file)
 

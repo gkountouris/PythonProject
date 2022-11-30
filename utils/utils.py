@@ -12,6 +12,9 @@ from nltk.corpus import stopwords
 import logging
 import pathlib
 
+from pyexcel_ods3 import save_data
+from collections import OrderedDict
+
 
 class ColoredFormatter(logging.Formatter):
     def format(self, record):
@@ -33,7 +36,7 @@ def log_gpu(all_devices, logger):
 
 
 def set_up_logger(level, mode):
-    path = pathlib.Path('')
+    path = pathlib.Path('/content/drive/MyDrive/Github/PythonProject')
     path = path.joinpath('Logs', level + '.log')
     # Create logger and assign handler
     logger = logging.getLogger(level)
@@ -167,6 +170,39 @@ def load_data(path, keep_only, logger):
     return data_
 
 
+def load_data2(path, logger):
+    with open(path, 'rb') as f:
+        try:
+            data = pickle.load(f)
+        except:
+            data = json.load(f)
+    sws = stopwords.words('english')
+    ##################################################################################################
+    logger.info('All Data: {}'.format(len(data)))
+    ##################################################################################################
+    data_ = []
+    for (qq, anss, context, t, id, graph_emb) in data:
+        anss_ = []
+        if len(context) > 500:
+            continue
+        for ans in anss:
+            if len(ans.strip()) == 0:
+                continue
+            if len(ans.split()) > 10:
+                continue
+            if ans.lower() in sws:
+                continue
+            if ans.split()[0].lower() in ['the', 'a']:
+                ans = ' '.join(ans.split()[1:])
+            anss_.append(ans)
+        if len(anss_) > 0:
+            data_.append((qq, anss_, context, t, id, graph_emb))
+    ##################################################################################################
+    logger.info('Keep only Data: {}'.format(len(data)))
+    ##################################################################################################
+    return data_
+
+
 def centroid_embeddings(g_emb, embed, lm_out, device):
     node_embeddings = torch.zeros(200).to(device)
     if len(g_emb) > 0:
@@ -202,11 +238,11 @@ def model_choose(g_emb, embed, lm_out, quest_ids, my_model, device, method):
                                        b.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
     if method == 'OnTopModeler':
-        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, device)
+        final_embeddings = centroid_embeddings(g_emb, embed, lm_out, first_device)
         begin_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 0]
         end_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
-    if method == 'BigAttention' or method == 'PerceiverIO':
+    if method == 'BigAttentionEmbeddings' or method == 'PerceiverIO':
         b = attention_embeddings(g_emb, embed)
         begin_y = torch.sigmoid(my_model(lm_out.to(device),
                                          b.to(device), len(quest_ids)))[0, :, 0]
