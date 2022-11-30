@@ -34,7 +34,7 @@ def log_gpu(all_devices, logger):
 
 
 def set_up_logger(level, mode):
-    path = pathlib.Path('/content/drive/MyDrive/Github/PythonProject')
+    path = pathlib.Path('')
     path = path.joinpath('Logs', level + '.log')
     # Create logger and assign handler
     logger = logging.getLogger(level)
