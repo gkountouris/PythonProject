@@ -225,14 +225,14 @@ if __name__ == '__main__':
     random.shuffle(train_data)
     num_training_steps = args.total_epochs * (len(train_data) // args.batch_size)
 
-    method = 'BigAttention'
-    if method == 'OnTopModeler':
+    args.method = 'BigAttention'
+    if args.method == 'OnTopModeler':
         my_model = my_models.OnTopModeler(args.transformer_size + 200, args.hidden_dim).to(rest_device)
-    elif method == 'CrossAttention':
+    elif args.method == 'CrossAttention':
         my_model = my_models.AttentionEmbeddings(args.transformer_size, args.hidden_dim).to(rest_device)
-    elif method == 'BigAttention':
+    elif args.method == 'BigAttention':
         my_model = my_models.BigAttentionEmbeddings(args.transformer_size, 200, args.hidden_dim).to(rest_device)
-    elif method == 'PerceiverIO':
+    elif args.method == 'PerceiverIO':
         my_model = my_models.PerceiverIO(args.transformer_size, 200, args.hidden_dim).to(rest_device)
     else:
         my_model = my_models.PerceiverIO(args.transformer_size, 200, args.hidden_dim).to(rest_device)

@@ -12,6 +12,7 @@ def add_encoder_arguments(parser):
     parser.add_argument("--model_name", type=str, default="michiyasunaga/BioLinkBERT-large", help="Prefix.",
                         required=False)
     parser.add_argument("--transformer_size", type=int, default=1024, help="Prefix.", required=False)
+    parser.add_argument("--method", type=int, default=1024, help="Prefix.", required=False)
 
 def add_optimization_arguments(parser):
     parser.add_argument("--batch_size", type=int, default=16, nargs="?", help="Batch size.", required=False)
