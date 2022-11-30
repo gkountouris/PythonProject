@@ -36,8 +36,7 @@ def train_one(the_data):
         lm_input = torch.tensor([quest_ids + sent_ids]).to(first_device)
         lm_out = lm_model(lm_input)[0].to(first_device)
         #######################################################################
-        print(g_emb, embed, lm_out, quest_ids, my_model,
-                                      rest_device, args.method)
+        print(lm_out, quest_ids, my_model, rest_device, args.method)
         begin_y, end_y = utils.model_choose(g_emb, embed, lm_out, quest_ids, my_model,
                                       rest_device, args.method)
         #######################################################################
@@ -215,6 +214,8 @@ if __name__ == '__main__':
     else:
         first_device = torch.device("cpu")
         rest_device = torch.device("cpu")
+
+    print(rest_device)
 
     utils.log_gpu(all_devices, info_logger)
     lm_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
