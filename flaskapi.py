@@ -1,39 +1,50 @@
-import urllib
-# import urllib2
-import json
-from pprint import pprint
-import sys
-from urllib import request
+from flask import Flask
+from flask import jsonify
+from flask import request
+from flask import Blueprint
+from flask import Flask
+from flaskapi_home import home_bp
+from flaskapi_contact import contact_bp
 
-print(sys.argv)
-ip      = sys.argv[1]
-fromm   = int(sys.argv[2])
-size    = int(sys.argv[3])
-F = sys.argv[4].upper().strip()
-L = sys.argv[5].upper().strip() if(len(sys.argv)>5) else None
-P = sys.argv[6].upper().strip() if(len(sys.argv)>6) else None
+app = Flask(__name__)
 
-# url = "http://localhost:9250/astynomia/anazitisi"
-# url = "http://10.1.69.15:9250/astynomia/anazitisi"
-url = "http://{}:9250/astynomia/anazitisi".format(ip)
-data = {
-        "first_name"    : F,
-        "last_name"     : L,
-        "father_name"   : P,
-        "size"          : size,
-        "from"          : fromm
-}
+@app.route('/person/')
+def hello():
+    return jsonify({'name':'Jimit',
+                    'address':'India'})
 
-req = request.urlopen(url, data=bytes(json.dumps(data)))
-req.add_header('Content-type', 'application/json')
-response = request.urlopen(req)
-ret_data = json.loads(response.read())
-pprint(ret_data)
+@app.route('/numbers/')
+def print_list():
+    return jsonify(list(range(5)))
 
-for r in ret_data['results']:
-    print(u"{} | {} | {} | {} | {}| {}".format(r['first_name'], r['father_name'], r['last_name'], r['score'], ret_data['max_score'], r['id']))
+@app.route('/hello/', methods=['GET', 'POST'])
+def welcome():
+    return "Hello World!"
 
-print('search :')
-pprint(data)
+@app.route('/<int:number>/')
+def incrementer(number):
+    return "Incremented number is " + str(number+1)
+
+@app.route('/home/')
+def home():
+    return "Home page"
+
+@app.route('/contact')
+def contact():
+    return "Contact page"
+
+@app.route('/teapot/')
+def teapot():
+    return "Would you like some tea?", 418
+
+@app.before_request
+def before():
+    print("This is executed BEFORE each request.")
+
+app.register_blueprint(home_bp, url_prefix='/home')
+app.register_blueprint(contact_bp, url_prefix='/contact')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
 
 

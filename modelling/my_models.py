@@ -143,7 +143,7 @@ class PerceiverIO(nn.Module):
 class BigModel(nn.Module):
     def __init__(self, input_size, g_embe_size, hidden_nodes):
 
-        super(BigModel, self).__init__()
+        super(BigModel, self).__init__()urllib
 
         self.Kmatrix1 = nn.Linear(g_embe_size, input_size, bias=False)
         self.Vmatrix1 = nn.Linear(g_embe_size, input_size, bias=False)
@@ -153,10 +153,10 @@ class BigModel(nn.Module):
         self.linear1 = nn.Linear(input_size, input_size, bias=True)
         self.linear2 = nn.Linear(input_size, input_size, bias=True)
 
-        self.Kmatrix2 = nn.Linear(input_size, input_size, bias=False)
-        self.Vmatrix2 = nn.Linear(input_size, input_size, bias=False)
-        self.Qmatrix2 = nn.Linear(input_size, input_size, bias=False)
-        self.sdpa2 = ScaledDotProductAttention(input_size)
+        # self.Kmatrix2 = nn.Linear(input_size, input_size, bias=False)
+        # self.Vmatrix2 = nn.Linear(input_size, input_size, bias=False)
+        # self.Qmatrix2 = nn.Linear(input_size, input_size, bias=False)
+        # self.sdpa2 = ScaledDotProductAttention(input_size)
 
         self.Kmatrix3 = nn.Linear(input_size, input_size, bias=False)
         self.Vmatrix3 = nn.Linear(input_size, input_size, bias=False)
@@ -183,18 +183,18 @@ class BigModel(nn.Module):
         added_emb = graph_emb + words_emb
 
         #Self-Attention
-        key2 = self.Kmatrix2(added_emb)
-        value2 = self.Vmatrix2(added_emb)
-        query2 = self.Qmatrix2(added_emb)
-        context2, _ = self.sdpa2(query2, key2, value2)
+        # key2 = self.Kmatrix2(added_emb)
+        # value2 = self.Vmatrix2(added_emb)
+        # query2 = self.Qmatrix2(added_emb)
+        # context2, _ = self.sdpa2(query2, key2, value2)
         ###############
 
         snipet_embeddings = input_xs[:, len_quest_ids:-1, :]
         # snipet_embeddings = value1[:, len_quest_ids:-1, :]
 
         # Cross-Attention 2
-        key3 = self.Kmatrix3(context2)
-        value3 = self.Vmatrix3(context2)
+        key3 = self.Kmatrix3(added_emb)
+        value3 = self.Vmatrix3(added_emb)
         query3 = self.Qmatrix3(snipet_embeddings)
         context3, _ = self.sdpa3(query3, key3, value3)
         ##################
