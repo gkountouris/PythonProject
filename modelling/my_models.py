@@ -103,7 +103,7 @@ class PerceiverIO(nn.Module):
         self.linear1 = nn.Linear(input_size, hidden_nodes, bias=True)
         self.linear2 = nn.Linear(hidden_nodes, 2, bias=True)
         self.loss = nn.BCELoss()
-        self.tsent_idsanh = nn.Tanh()
+        self.tanh = nn.Tanh()
 
     def forward(self, input_xs, g_embe, len_quest_ids):
 
@@ -166,7 +166,7 @@ class BigModel(nn.Module):
         self.linear3 = nn.Linear(input_size, hidden_nodes, bias=True)
         self.linear4 = nn.Linear(hidden_nodes, 2, bias=True)
         self.loss = nn.BCELoss()
-        self.tsent_idsanh = nn.Tanh()
+        self.tanh = nn.Tanh()
 
     def forward(self, input_xs, g_embe, len_quest_ids):
 

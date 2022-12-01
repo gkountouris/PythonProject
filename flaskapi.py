@@ -1,18 +1,37 @@
-from flask import Flask
+import urllib
+# import urllib2
+import json
+from pprint import pprint
+import sys
 
-app = Flask(__name__)
+ip      = sys.argv[1]
+fromm   = int(sys.argv[2])
+size    = int(sys.argv[3])
+F = sys.argv[4].upper().strip()
+L = sys.argv[5].upper().strip() if(len(sys.argv)>5) else None
+P = sys.argv[6].upper().strip() if(len(sys.argv)>6) else None
 
-from app import routes
+# url = "http://localhost:9250/astynomia/anazitisi"
+# url = "http://10.1.69.15:9250/astynomia/anazitisi"
+url = "http://{}:9250/astynomia/anazitisi".format(ip)
+data = {
+        "first_name"    : F,
+        "last_name"     : L,
+        "father_name"   : P,
+        "size"          : size,
+        "from"          : fromm
+}
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+req = urllib.request(url, data=json.dumps(data))
+req.add_header('Content-type', 'application/json')
+response = urllib2.urlopen(req)
+ret_data = json.loads(response.read())
+pprint(ret_data)
 
-if __name__ == '__main__':
-    app.run()
+for r in ret_data['results']:
+    print(u"{} | {} | {} | {} | {}| {}".format(r['first_name'], r['father_name'], r['last_name'], r['score'], ret_data['max_score'], r['id']))
 
-# Δε χρειάζεσαι κάτι πέρα από αυτό. Και αυτό πολύ είναι
-# Δλδ μια συνάρτηση θες που να επιστρέφει τα δικά σου.
-# Και μετά απλά τρέχεις το φλασκ βάζεις ένα endpoint και είσαι έτοιμος.
-# Πρώτο βήμα φτιάχνεις τον κώδικα που φορτώνει το μοντέλο μια φορά και
-# φτιάχνεις μια συνάρτηση που παίρνει μια ερώτηση και επιστρέφει απαντήσεις όπως είπαμε
+print('search :')
+pprint(data)
+
+
