@@ -150,8 +150,8 @@ class BigModel(nn.Module):
         self.Qmatrix1 = nn.Linear(input_size, input_size, bias=False)
         self.sdpa1 = ScaledDotProductAttention(g_embe_size)
 
-        self.linear1 = nn.Linear(input_size, hidden_nodes, bias=True)
-        self.linear2 = nn.Linear(input_size, hidden_nodes, bias=True)
+        self.linear1 = nn.Linear(input_size, input_size, bias=True)
+        self.linear2 = nn.Linear(input_size, input_size, bias=True)
 
         self.Kmatrix2 = nn.Linear(input_size, input_size, bias=False)
         self.Vmatrix2 = nn.Linear(input_size, input_size, bias=False)
