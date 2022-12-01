@@ -3,7 +3,9 @@ import urllib
 import json
 from pprint import pprint
 import sys
+from urllib import request
 
+print(sys.argv)
 ip      = sys.argv[1]
 fromm   = int(sys.argv[2])
 size    = int(sys.argv[3])
@@ -22,9 +24,9 @@ data = {
         "from"          : fromm
 }
 
-req = urllib.request(url, data=json.dumps(data))
+req = request.urlopen(url, data=bytes(json.dumps(data)))
 req.add_header('Content-type', 'application/json')
-response = urllib2.urlopen(req)
+response = request.urlopen(req)
 ret_data = json.loads(response.read())
 pprint(ret_data)
 
