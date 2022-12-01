@@ -43,7 +43,8 @@ def train_one(the_data):
         target_e = torch.zeros(len(sent_ids) - 1).to(rest_device)
         #######################################################################
         for ea in exact_answers:
-            if len(ea) == 0:
+            ea_ids = lm_tokenizer.encode(ea.lower())[1:-1]
+            if len(ea_ids) == 0:
                 continue
             ea_ids = lm_tokenizer.encode(ea.lower())[1:-1]
             for b, e in utils.find_sub_list(ea_ids, sent_ids):
@@ -101,9 +102,9 @@ def test_one(the_data, mode):
             target_e = torch.zeros(len(sent_ids) - 1).to(rest_device)
             #######################################################################
             for ea in exact_answers:
-                if len(ea) == 0:
-                    continue
                 ea_ids = lm_tokenizer.encode(ea.lower())[1:-1]
+                if len(ea_ids) == 0:
+                    continue
                 for b, e in utils.find_sub_list(ea_ids, sent_ids):
                     target_b[b] = 1
                     target_e[e] = 1
