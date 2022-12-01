@@ -143,7 +143,7 @@ class PerceiverIO(nn.Module):
 class BigModel(nn.Module):
     def __init__(self, input_size, g_embe_size, hidden_nodes):
 
-        super(BigModel, self).__init__()urllib
+        super(BigModel, self).__init__()
 
         self.Kmatrix1 = nn.Linear(g_embe_size, input_size, bias=False)
         self.Vmatrix1 = nn.Linear(g_embe_size, input_size, bias=False)
