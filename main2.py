@@ -19,8 +19,8 @@ from modelling import my_models
 from io import StringIO
 # A Python program to demonstrate working of OrderedDict
 from collections import OrderedDict
-from pyexcel_ods import save_data
-from pyexcel_ods import get_data
+# from pyexcel_ods import save_data
+# from pyexcel_ods import get_data
 
 def train_one(the_data):
     pbar = tqdm(the_data)
@@ -180,8 +180,8 @@ if __name__ == '__main__':
         my_data_path = pathlib.Path('/media/gkoun/BioASQ/BioASQ-data/bioasq_factoid/Graph/')
         save_folder = pathlib.Path('/media/gkoun/BioASQ/saved_models/')
         args.train_path = my_data_path.joinpath(
-            'final_pubmed_squad_covid_data_dev_graph.json').resolve()
-        args.dev_path = my_data_path.joinpath('final_pubmed_squad_covid_data_train_graph.json').resolve()
+            'final_pubmed_squad_covid_data_train_graph.json').resolve()
+        args.dev_path = my_data_path.joinpath('final_pubmed_squad_covid_data_dev_graph.json').resolve()
         args.test_path = my_data_path.joinpath(
             'final_pubmed_squad_covid_data_test_graph.json').resolve()
         with open(my_data_path.joinpath('drkg_enhanced_logic_3_200_30_entity_embeddings.json'), 'r') as f:
@@ -215,8 +215,6 @@ if __name__ == '__main__':
         first_device = torch.device("cpu")
         rest_device = torch.device("cpu")
 
-    print(rest_device)
-
     utils.log_gpu(all_devices, info_logger)
     lm_tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     info_logger.info(lm_tokenizer.special_tokens_map)
@@ -228,17 +226,19 @@ if __name__ == '__main__':
     random.shuffle(train_data)
     num_training_steps = args.total_epochs * (len(train_data) // args.batch_size)
 
-    args.method = 'BigAttention'
+    args.method = 'BigModel'
     if args.method == 'OnTopModeler':
         my_model = my_models.OnTopModeler(args.transformer_size + 200, args.hidden_dim).to(rest_device)
     elif args.method == 'CrossAttention':
         my_model = my_models.AttentionEmbeddings(args.transformer_size, args.hidden_dim).to(rest_device)
-    elif args.method == 'BigAttention':
+    elif args.method == 'BigAttentionEmbeddings':
         my_model = my_models.BigAttentionEmbeddings(args.transformer_size, 200, args.hidden_dim).to(rest_device)
     elif args.method == 'PerceiverIO':
         my_model = my_models.PerceiverIO(args.transformer_size, 200, args.hidden_dim).to(rest_device)
+    elif args.method == 'BigModel':
+        my_model = my_models.BigModel(args.transformer_size, 200, args.hidden_dim).to(rest_device)
     else:
-        my_model = my_models.PerceiverIO(args.transformer_size, 200, args.hidden_dim).to(rest_device)
+        my_model = my_models.OnTopModeler(args.transformer_size + 200, args.hidden_dim).to(rest_device)
 
     optimizer = optim.AdamW(my_model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
     lr_scheduler = utils.get_linear_schedule_with_warmup(optimizer, num_warmup_steps=args.warmup_steps,
@@ -254,8 +254,8 @@ if __name__ == '__main__':
     results = OrderedDict()
     results['DEV'] = []
     results['TEST'] = []
-    results.update({"DEV": get_data('results.ods')['DEV']})
-    results.update({"TEST": get_data('results.ods')['TEST']})
+    # results.update({"DEV": get_data('results.ods')['DEV']})
+    # results.update({"TEST": get_data('results.ods')['TEST']})
 
     results['DEV'].append([args.method, args.model_name, 'Graph: {}'.format(args.graph)])
     results['TEST'].append([args.method, args.model_name, 'Graph: {}'.format(args.graph)])
@@ -301,4 +301,4 @@ if __name__ == '__main__':
     _, data_results = test_one(test_data, 'TEST')
     results['TEST'].append(data_results)
 
-    save_data("results.ods", results)
+    # save_data("results.ods", results)

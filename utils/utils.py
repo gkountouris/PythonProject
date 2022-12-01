@@ -239,7 +239,7 @@ def model_choose(g_emb, embed, lm_out, quest_ids, my_model, device, method):
         begin_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 0]
         end_y = torch.sigmoid(my_model(final_embeddings.to(device)))[0, len(quest_ids):-1, 1]
         return begin_y, end_y
-    if method == 'BigAttentionEmbeddings' or method == 'PerceiverIO':
+    if method == 'BigAttentionEmbeddings' or method == 'PerceiverIO' or method == 'BigModel':
         b = attention_embeddings(g_emb, embed)
         begin_y = torch.sigmoid(my_model(lm_out.to(device),
                                          b.to(device), len(quest_ids)))[0, :, 0]
