@@ -26,7 +26,6 @@ bioclean_mod    = lambda t: re.sub(
     t.replace('"', '').replace('/', '').replace('\\', '').replace("'", '').replace("-", ' ').strip()
 )
 
-
 @app.route("/get_one_pmid", methods=["POST", "GET"])
 def get_one_pmid():
     pass
